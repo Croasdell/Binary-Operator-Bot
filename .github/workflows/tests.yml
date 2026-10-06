@@ -1,0 +1,36 @@
+name: Tests and packages
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.12', '3.13', '3.14']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install build twine
+      - run: python -m unittest discover -s tests -v
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - name: Verify installed wheel outside checkout
+        shell: bash
+        run: |
+          python -m venv /tmp/bob-wheel
+          /tmp/bob-wheel/bin/python -m pip install dist/*.whl
+          cd /tmp
+          /tmp/bob-wheel/bin/bob --version
+          test "$(/tmp/bob-wheel/bin/bob --plain XNOR 1010 1100)" = "1001"
+          printf '%s' '[{"operation":"DEC_TO_BIN","inputs":["5"],"width":8}]' | /tmp/bob-wheel/bin/python -m bob --batch
+      - uses: actions/upload-artifact@v4
+        if: matrix.python == '3.11'
+        with:
+          name: bob-distributions
+          path: dist/*
