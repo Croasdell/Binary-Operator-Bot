@@ -12,8 +12,8 @@ jobs:
       matrix:
         python: ['3.11', '3.12', '3.13', '3.14']
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.0.0
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install build twine
@@ -29,7 +29,7 @@ jobs:
           /tmp/bob-wheel/bin/bob --version
           test "$(/tmp/bob-wheel/bin/bob --plain XNOR 1010 1100)" = "1001"
           printf '%s' '[{"operation":"DEC_TO_BIN","inputs":["5"],"width":8}]' | /tmp/bob-wheel/bin/python -m bob --batch
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.1
         if: matrix.python == '3.11'
         with:
           name: bob-distributions
