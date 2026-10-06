@@ -4,9 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "binary-operator-bot"
-version = "0.1.0"
-description = "Validated binary operations with an optional local AI memory layer"
+version = "0.2.0"
+description = "Deterministic, validated binary-string operations"
+readme = "README.md"
 requires-python = ">=3.11"
 
 [project.scripts]
 bob = "bob.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["bob*"]
+
+[project.urls]
+Repository = "https://github.com/Croasdell/Binary-Operator-Bot"
